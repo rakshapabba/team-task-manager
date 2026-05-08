@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api'
+  baseURL: 'https://team-task-manager-production-3d5e.up.railway.app'
 });
 
 API.interceptors.request.use((req) => {

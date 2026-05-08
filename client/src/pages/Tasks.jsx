@@ -23,8 +23,8 @@ export default function Tasks() {
     try {
 
       const res = await axios.get(
-        'http://localhost:5000/api/tasks'
-      );
+  'https://team-task-manager-production-3d5e.up.railway.app/api/tasks'
+);
 
       setTasks(res.data);
 
@@ -52,13 +52,13 @@ export default function Tasks() {
     try {
 
       await axios.post(
-        'http://localhost:5000/api/tasks',
-        {
-          title: form.title,
-          dueDate: form.dueDate,
-          status: 'Pending'
-        }
-      );
+  'https://team-task-manager-production-3d5e.up.railway.app/api/tasks',
+  {
+    title: form.title,
+    dueDate: form.dueDate,
+    status: 'Pending'
+  }
+);
 
       setForm({
         title: '',
@@ -81,8 +81,8 @@ export default function Tasks() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/tasks/${id}`
-      );
+  `https://team-task-manager-production-3d5e.up.railway.app/api/tasks/${id}`
+);
 
       fetchTasks();
 
@@ -103,9 +103,9 @@ export default function Tasks() {
     try {
 
       await axios.put(
-        `http://localhost:5000/api/tasks/${id}`,
-        { status }
-      );
+  `https://team-task-manager-production-3d5e.up.railway.app/api/tasks/${id}`,
+  { status }
+);
 
       fetchTasks();
 

@@ -18,9 +18,7 @@ export default function Team() {
 
     try {
 
-      const res = await axios.get(
-        'http://localhost:5000/api/auth/users'
-      );
+      const res = await axios.get( 'https://team-task-manager-production-3d5e.up.railway.app/api/auth/users' );
 
       setMembers(res.data);
 
