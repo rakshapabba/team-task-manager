@@ -207,7 +207,8 @@ Add screenshot here:https://drive.google.com/file/d/1NwEUOaJFuL3mRnagfGLFWuF3yxy
 Add screenshot here:https://drive.google.com/file/d/1IYGR9fxRZnexKcdm5CalU6W3BvLvvdeA/view?usp=sharing
 
 ```md
-![Task Management](screenshots/tasks.png)
+[![Task Management](screenshots/tasks.png)](https://drive.google.com/file/d/1IYGR9fxRZnexKcdm5CalU6W3BvLvvdeA/view?usp=sharing
+)
 ```
 
 ---
