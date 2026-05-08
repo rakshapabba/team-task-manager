@@ -3,242 +3,184 @@ import axios from 'axios';
 
 import Navbar from '../components/Navbar';
 
-export default function Projects() {
-
-const [projects, setProjects] = useState([]);
-
-const [form, setForm] = useState({
-name: '',
-description: ''
+const API = axios.create({
+  baseURL: 'https://team-task-manager-production-3d5e.up.railway.app/api'
 });
 
-useEffect(() => {
+export default function Projects() {
 
-```
-fetchProjects();
-```
-
-}, []);
-
-const fetchProjects = async () => {
-
-```
-try {
-
-  const res = await axios.get(
-    'https://team-task-manager-production-3d5e.up.railway.app/api/projects'
-  );
-
-  setProjects(res.data);
-
-} catch (err) {
-
-  console.log(err);
-
-}
-```
-
-};
-
-const createProject = async () => {
-
-```
-if (!form.name) {
-  return alert('Enter project name');
-}
-
-try {
-
-  await axios.post(
-    'https://team-task-manager-production-3d5e.up.railway.app/api/projects',
-    form
-  );
-
-  setForm({
+  const [projects, setProjects] = useState([]);
+  const [form, setForm] = useState({
     name: '',
     description: ''
   });
 
-  fetchProjects();
+  const [loading, setLoading] = useState(true);
 
-} catch (err) {
+  useEffect(() => {
+    fetchProjects();
+  }, []);
 
-  console.log(err);
+  // GET PROJECTS
+  const fetchProjects = async () => {
+    try {
+      const token = localStorage.getItem('token');
 
-}
-```
-
-};
-
-return (
-
-```
-<div
-  style={{
-    minHeight: '100vh',
-    background:
-      'linear-gradient(to right, #ff9966, #ff5e62)',
-    color: 'white'
-  }}
->
-
-  <Navbar />
-
-  <div style={{ padding: '30px' }}>
-
-    <h1
-      style={{
-        fontSize: '42px',
-        marginBottom: '10px'
-      }}
-    >
-      Projects 🚀
-    </h1>
-
-    <p
-      style={{
-        fontSize: '18px',
-        opacity: 0.9,
-        marginBottom: '30px'
-      }}
-    >
-      Create and manage your team projects
-    </p>
-
-    <div
-      style={{
-        background: 'white',
-        color: 'black',
-        padding: '25px',
-        borderRadius: '20px',
-        boxShadow:
-          '0 5px 15px rgba(0,0,0,0.3)',
-        marginBottom: '40px'
-      }}
-    >
-
-      <h2>Create New Project</h2>
-
-      <input
-        type="text"
-        placeholder="Project Name"
-        value={form.name}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            name: e.target.value
-          })
+      const res = await API.get('/projects', {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-        style={{
-          width: '100%',
-          padding: '12px',
-          marginTop: '15px',
-          borderRadius: '10px',
-          border: '1px solid #ccc'
-        }}
-      />
+      });
 
-      <br /><br />
+      setProjects(res.data || []);
+    } catch (err) {
+      console.log("Fetch error:", err.response?.data || err.message);
+      setProjects([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      <textarea
-        placeholder="Project Description"
-        value={form.description}
-        onChange={(e) =>
-          setForm({
-            ...form,
-            description: e.target.value
-          })
+  // CREATE PROJECT
+  const createProject = async () => {
+    if (!form.name) {
+      return alert('Enter project name');
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+
+      await API.post('/projects', form, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-        rows="4"
-        style={{
-          width: '100%',
-          padding: '12px',
-          borderRadius: '10px',
-          border: '1px solid #ccc',
-          resize: 'none'
-        }}
-      />
+      });
 
-      <br /><br />
+      setForm({
+        name: '',
+        description: ''
+      });
 
-      <button
-        onClick={createProject}
-        style={{
-          padding: '12px 25px',
-          background: '#ff5e62',
-          color: 'white',
-          border: 'none',
-          borderRadius: '10px',
-          cursor: 'pointer',
-          fontWeight: 'bold',
-          fontSize: '16px'
-        }}
-      >
-        Create Project
-      </button>
+      fetchProjects();
 
-    </div>
+    } catch (err) {
+      console.log("Create error:", err.response?.data || err.message);
+    }
+  };
 
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateColumns:
-          'repeat(auto-fit, minmax(300px, 1fr))',
-        gap: '20px'
-      }}
-    >
+  return (
+    <div style={{
+      minHeight: '100vh',
+      background: 'linear-gradient(to right, #ff9966, #ff5e62)',
+      color: 'white'
+    }}>
+      <Navbar />
 
-      {
-        projects.length === 0
-        ?
-        (
-          <h2>No Projects Available</h2>
-        )
-        :
-        (
-          projects.map(project => (
+      <div style={{ padding: '30px' }}>
 
-            <div
-              key={project._id}
-              style={{
-                background: 'white',
-                color: 'black',
-                padding: '25px',
-                borderRadius: '20px',
-                boxShadow:
-                  '0 5px 15px rgba(0,0,0,0.2)'
-              }}
-            >
+        <h1 style={{ fontSize: '42px', marginBottom: '10px' }}>
+          Projects 🚀
+        </h1>
 
-              <h2
+        <p style={{ fontSize: '18px', opacity: 0.9, marginBottom: '30px' }}>
+          Create and manage your team projects
+        </p>
+
+        {/* CREATE FORM */}
+        <div style={{
+          background: 'white',
+          color: 'black',
+          padding: '25px',
+          borderRadius: '20px',
+          marginBottom: '40px'
+        }}>
+          <h2>Create New Project</h2>
+
+          <input
+            type="text"
+            placeholder="Project Name"
+            value={form.name}
+            onChange={(e) =>
+              setForm({ ...form, name: e.target.value })
+            }
+            style={{
+              width: '100%',
+              padding: '12px',
+              marginTop: '15px',
+              borderRadius: '10px',
+              border: '1px solid #ccc'
+            }}
+          />
+
+          <br /><br />
+
+          <textarea
+            placeholder="Project Description"
+            value={form.description}
+            onChange={(e) =>
+              setForm({ ...form, description: e.target.value })
+            }
+            rows="4"
+            style={{
+              width: '100%',
+              padding: '12px',
+              borderRadius: '10px',
+              border: '1px solid #ccc',
+              resize: 'none'
+            }}
+          />
+
+          <br /><br />
+
+          <button
+            onClick={createProject}
+            style={{
+              padding: '12px 25px',
+              background: '#ff5e62',
+              color: 'white',
+              border: 'none',
+              borderRadius: '10px',
+              cursor: 'pointer'
+            }}
+          >
+            Create Project
+          </button>
+        </div>
+
+        {/* PROJECT LIST */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: '20px'
+        }}>
+          {loading ? (
+            <h3>Loading projects...</h3>
+          ) : projects.length === 0 ? (
+            <h3>No Projects Available</h3>
+          ) : (
+            projects.map(project => (
+              <div
+                key={project._id}
                 style={{
-                  color: '#ff5e62'
+                  background: 'white',
+                  color: 'black',
+                  padding: '25px',
+                  borderRadius: '20px'
                 }}
               >
-                {project.name}
-              </h2>
+                <h2 style={{ color: '#ff5e62' }}>
+                  {project.name}
+                </h2>
 
-              <p
-                style={{
-                  marginTop: '15px',
-                  lineHeight: '1.6'
-                }}
-              >
-                {project.description}
-              </p>
+                <p style={{ marginTop: '15px' }}>
+                  {project.description}
+                </p>
+              </div>
+            ))
+          )}
+        </div>
 
-            </div>
-
-          ))
-        )
-      }
-
+      </div>
     </div>
-
-  </div>
-
-</div>
-```
-
-);
+  );
 }
