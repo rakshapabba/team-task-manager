@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+const API = axios.create({
+  baseURL: 'https://team-task-manager-production-3d5e.up.railway.app/api'
+});
+
 export default function Login() {
 
   const navigate = useNavigate();
@@ -15,6 +19,7 @@ export default function Login() {
     e.preventDefault();
 
     try {
+
       const res = await API.post('/auth/login', form);
 
       localStorage.setItem('token', res.data.token);
@@ -22,12 +27,13 @@ export default function Login() {
 
       alert('Login Successful');
 
-      // 🔥 redirect to dashboard
       navigate('/dashboard');
 
     } catch (err) {
+
       console.log(err);
       alert('Invalid Credentials');
+
     }
   };
 
@@ -59,16 +65,34 @@ export default function Login() {
             type="email"
             placeholder="Email"
             required
-            style={{ width: '100%', padding: '12px', marginBottom: '10px' }}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
+            style={{
+              width: '100%',
+              padding: '12px',
+              marginBottom: '10px'
+            }}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                email: e.target.value
+              })
+            }
           />
 
           <input
             type="password"
             placeholder="Password"
             required
-            style={{ width: '100%', padding: '12px', marginBottom: '10px' }}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            style={{
+              width: '100%',
+              padding: '12px',
+              marginBottom: '10px'
+            }}
+            onChange={(e) =>
+              setForm({
+                ...form,
+                password: e.target.value
+              })
+            }
           />
 
           <button
@@ -88,7 +112,6 @@ export default function Login() {
 
         </form>
 
-        {/* 🔥 Go to Signup */}
         <button
           onClick={() => navigate('/signup')}
           style={{
@@ -106,6 +129,7 @@ export default function Login() {
         </button>
 
       </div>
+
     </div>
   );
 }
